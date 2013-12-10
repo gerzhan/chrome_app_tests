@@ -1,16 +1,16 @@
 {
-    "name": "application-name",
-    "description":"Chrome Application ",
+    "name": "First Chrome Application on GitHub",
+    "description":"My first Chrome Application on GitHub ",
     "manifest_version": 2,
     "version": "0.0.1",
     "app":{
         "background": {
-            "scripts": ["background.js"]
+            "scripts": ["app/main.js"]
         }
     },
     "icons":{
-        "16":"app-app-icon-16.png",
-        "128":"app-app-icon-128.png"
+        "16":"app-icon-16.png",
+        "128":"app-icon-128.png"
     }
 
 
