@@ -1,9 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <meta charset="utf-8">
+    <title>My first Chrome App</title>
+    <script src="app/angular.min.js"></script>
+    <link rel="stylesheet" href="todo.css">
 </head>
 <body>
-    <div>My first Chrome Application on GitHub</div>
+    <h2>Todo</h2>
+    <div>
+        <ul>
+            <li>
+                {{todoText}}
+            </li>
+        </ul>
+    <input type="text" ng-model="todoText"  size="30"
+           placeholder="type your todo here">
+    </div>
+<script >
+    var app = angular.module('mainApp',[]);
+</script>
 </body>
 </html>
