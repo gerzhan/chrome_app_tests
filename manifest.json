@@ -11,7 +11,10 @@
     "icons":{
         "16":"app-icon-16.png",
         "128":"app-icon-128.png"
-    }
+    },
+    "permissions":[
+        "storage"
+    ]
 
 
 }

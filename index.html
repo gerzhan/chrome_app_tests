@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app ng-csp>
+<html ng-app="mainApp" ng-csp>
 <head>
     <meta charset="utf-8">
     <title>My first Chrome App</title>
@@ -11,16 +11,16 @@
     <h2>Todo</h2>
     <div ng-controller="TodoController">
         <span>{{remaining()}} of {{todos.length}} remaining</span>
-        [<a href="" ng-click="archive()">archive</a>]
+        [<a href="" ng-click="archive()|| save()">archive</a>]
         <ul>
-            <li ng-repeat="todo in todos">
-                <input type="checkbox" ng-model="todo.done">
+            <li ng-repeat="todo in todos track by $index">
+                <input type="checkbox" ng-model="todo.done" ng-change="save()">
                 <span class="done-{{todo.done}}">
                      {{todo.text}}
                 </span>
             </li>
         </ul>
-        <form ng-submit="addTodo()">
+        <form ng-submit="addTodo()||save()">
             <input type="text" ng-model="todoText" size="30"
                    placeholder="add new todo here">
             <input class="btn-primary" type="submit" value="add">

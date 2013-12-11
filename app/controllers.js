@@ -1,7 +1,28 @@
-function TodoController($scope) {
-    $scope.todos = [
-        {text:'learn angular', done:true},
-        {text:'build an angular app', done:false}];
+app = angular.module('mainApp',[]);
+app.controller('TodoController',['$scope',function($scope) {
+    // задание асинхронного режима
+    chrome.storage.sync.get('todolist',function(value){
+        // в связи с обработкой события не из angular
+        // необходимо применять $apply
+        $scope.$apply(function(){
+            $scope.load(value);
+        })
+    });
+    // выполнить инициализацию данных
+    $scope.load = function(value){
+        if (value && value.todolist){
+            $scope.todos = value.todolist;
+        }else{
+            $scope.todos = [
+                {text:'learn angular', done:true},
+                {text:'build an angular app', done:false}];
+        }
+    }
+    // сохранить в хранилище данные
+    $scope.save = function(){
+        chrome.storage.sync.set({'todolist':$scope.todos});
+    };
+
 
     $scope.addTodo = function() {
         $scope.todos.push({text:$scope.todoText, done:false});
@@ -24,3 +45,4 @@ function TodoController($scope) {
         });
     };
 }
+]);
