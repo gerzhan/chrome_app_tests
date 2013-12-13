@@ -1,5 +1,6 @@
 app = angular.module('mainApp',[]);
 app.controller('TodoController',['$scope',function($scope) {
+
     // задание асинхронного режима
     chrome.storage.sync.get('todolist',function(value){
         // в связи с обработкой события не из angular
@@ -28,7 +29,7 @@ app.controller('TodoController',['$scope',function($scope) {
         $scope.todos.push({text:$scope.todoText, done:false});
         $scope.todoText = '';
     };
-    // соличество выполненных задач
+    // количество выполненных задач
     $scope.remaining = function() {
         var count = 0;
         angular.forEach($scope.todos, function(todo) {

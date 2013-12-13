@@ -13,7 +13,9 @@
         "128":"img/app-icon-128.png"
     },
     "permissions":[
-        "storage"
+        "storage",
+        //"unlimitedStorage",
+        "notifications"
     ]
 
 
