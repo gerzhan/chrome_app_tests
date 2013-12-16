@@ -19,3 +19,18 @@ button, input[type=submit] {
     text-decoration: line-through;
     color: grey;
 }
+
+
+@-webkit-keyframes switch-green {
+    from { background-color: white;} to {background-color: rgb(163, 255, 163);}
+}
+@-webkit-keyframes switch-red {
+    from { background-color: white;} to {background-color: rgb(255, 203, 203);}
+}
+.dragging {
+    -webkit-animation: switch-green 0.5s ease-in-out 0 infinite alternate;
+}
+
+.invalid-dragging {
+    -webkit-animation: switch-red 0.5s ease-in-out 0 infinite alternate;
+}

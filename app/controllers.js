@@ -1,49 +1,108 @@
-app = angular.module('mainApp',[]);
-app.controller('TodoController',['$scope',function($scope) {
+app = angular.module('mainApp', []);
+app.controller('TodoController', ['$scope', function ($scope) {
 
     // задание асинхронного режима
-    chrome.storage.sync.get('todolist',function(value){
+    chrome.storage.sync.get('todolist', function (value) {
         // в связи с обработкой события не из angular
-        // необходимо применять $apply
-        $scope.$apply(function(){
+        // необходимо применять $apply\
+        $scope.$apply(function () {
             $scope.load(value);
         })
     });
-    // выполнить инициализацию данных
-    $scope.load = function(value){
-        if (value && value.todolist){
+
+    var defaultDropText = "Переместите файл для созранения в данную область";
+    $scope.dropTexr = defaultDropText;
+    // метод обеспечивающий контроль состояния перетаскивания объекта. необходим для замены стиля и
+    var dragOver = function (e) {
+        e.stopPropagation(); //
+        e.preventDefault();// приостановить дальнейщую обработку события
+        var valid = e.dataTransfer && e.dataTransfer.types
+            && (e.dataTransfer.types.indexOf('Files') >= 0
+            || e.dataTransfer.types.indexOf('text/uri-list') >= 0
+            );
+        $scope.$apply(function () {
+            $scope.dropText = valid ? "Drop files and remote images and they will become Todos"
+                : "Can only drop files and remote images here";
+            $scope.dropClass = valid ? "dragging" : "invalid-dragging";
+        });
+
+    }
+    // reset style and text to the default
+    var dragLeave = function (e) {
+        $scope.$apply(function () {
+            $scope.dropText = defaultDropText;
+            $scope.dropClass = '';
+        });
+    }
+
+    // on drop, we create the appropriate TODOs using dropped data
+    var drop = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var newTodos = [];
+        if (e.dataTransfer.types.indexOf('Files') >= 0) {
+            var files = e.dataTransfer.files;
+            for (var i = 0; i < files.length; i++) {
+                var text = files[i].name + ', ' + files[i].size + ' bytes';
+                newTodos.push({text: text, done: false, file: files[i]});
+            }
+        } else { // uris
+            var uri = e.dataTransfer.getData("text/uri-list");
+            newTodos.push({text: uri, done: false, uri: uri});
+        }
+
+        $scope.$apply(function () {
+            $scope.dropText = defaultDropText;
+            $scope.dropClass = '';
+            for (var i = 0; i < newTodos.length; i++) {
+                $scope.todos.push(newTodos[i]);
+            }
+            $scope.save();
+        });
+    }
+
+    document.body.addEventListener("dragover", dragOver, false);
+    document.body.addEventListener("dragleave", dragLeave, false);
+    document.body.addEventListener("drop", drop, false);
+
+// выполнить инициализацию данных
+    $scope.load = function (value) {
+        if (value && value.todolist) {
             $scope.todos = value.todolist;
-        }else{
+        } else {
             $scope.todos = [
-                {text:'learn angular', done:true},
-                {text:'build an angular app', done:false}];
+                {text: 'learn angular', done: true},
+                {text: 'build an angular app', done: false}
+            ];
         }
     }
-    // сохранить в хранилище данные
-    $scope.save = function(){
-        chrome.storage.sync.set({'todolist':$scope.todos});
+// сохранить в хранилище данные
+    $scope.save = function () {
+        chrome.storage.sync.set({'todolist': $scope.todos});
     };
 
 
-    $scope.addTodo = function() {
-        $scope.todos.push({text:$scope.todoText, done:false});
+    $scope.addTodo = function () {
+        $scope.todos.push({text: $scope.todoText, done: false});
         $scope.todoText = '';
     };
-    // количество выполненных задач
-    $scope.remaining = function() {
+// количество выполненных задач
+    $scope.remaining = function () {
         var count = 0;
-        angular.forEach($scope.todos, function(todo) {
+        angular.forEach($scope.todos, function (todo) {
             count += todo.done ? 0 : 1;
         });
         return count;
     };
 
-    $scope.archive = function() {
+    $scope.archive = function () {
         var oldTodos = $scope.todos;
         $scope.todos = [];
-        angular.forEach(oldTodos, function(todo) {
+        angular.forEach(oldTodos, function (todo) {
             if (!todo.done) $scope.todos.push(todo);
         });
     };
 }
-]);
+])
+;

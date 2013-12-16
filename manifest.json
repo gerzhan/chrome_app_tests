@@ -2,10 +2,10 @@
     "name": "First Chrome Application on GitHub",
     "description":"My first Chrome Application on GitHub ",
     "manifest_version": 2,
-    "version": "0.0.1",
+    "version": "0.0.2",
     "app":{
         "background": {
-            "scripts": ["app/main.js"]
+            "scripts": ["app/background.js"]
         }
     },
     "icons":{
